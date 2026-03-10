@@ -9,19 +9,31 @@
 body{
 font-family:Arial;
 text-align:center;
-background:linear-gradient(#ffecd2,#fcb69f);
+background:linear-gradient(#ffe8c7,#ffb4a2);
 margin:0;
-padding:20px;
+padding:10px;
 }
 
 h1{
-color:#d62828;
+color:#c1121f;
+}
+
+#score{
+font-size:20px;
+margin-top:5px;
+color:#333;
+}
+
+#question{
+font-size:24px;
+margin-top:10px;
+margin-bottom:10px;
 }
 
 #pizza{
-width:320px;
-height:320px;
-margin:30px auto;
+width:260px;
+height:260px;
+margin:20px auto;
 border-radius:50%;
 position:relative;
 background:#f4a261;
@@ -40,17 +52,31 @@ transition:0.3s;
 }
 
 .slice:hover{
-transform:scale(1.05);
+filter:brightness(1.1);
 }
 
-#question{
-font-size:26px;
-margin-top:10px;
+.selected{
+background:#ef476f !important;
+animation:pop 0.2s;
+}
+
+@keyframes pop{
+0%{transform:scale(1)}
+50%{transform:scale(1.1)}
+100%{transform:scale(1)}
+}
+
+.pepperoni{
+width:16px;
+height:16px;
+background:#b22222;
+border-radius:50%;
+position:absolute;
 }
 
 #result{
-font-size:24px;
-margin-top:20px;
+font-size:22px;
+margin-top:10px;
 font-weight:bold;
 }
 
@@ -62,6 +88,7 @@ background:#2a9d8f;
 color:white;
 border-radius:8px;
 cursor:pointer;
+margin-top:10px;
 }
 
 button:hover{
@@ -75,11 +102,13 @@ background:#21867a;
 
 <h1>🍕 Fraction Pizza Game</h1>
 
+<div id="score">Score: 0</div>
+
 <div id="question"></div>
 
 <div id="pizza"></div>
 
-<button onclick="newQuestion()">New Pizza</button>
+<button onclick="newQuestion()">Next Pizza</button>
 
 <div id="result"></div>
 
@@ -87,17 +116,32 @@ background:#21867a;
 
 let totalSlices;
 let correctSlices;
+let score=0;
 
 const pizza=document.getElementById("pizza");
 
 function playCorrect(){
-let audio=new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_115b9b0a4c.mp3");
-audio.play();
+new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_115b9b0a4c.mp3").play();
 }
 
 function playWrong(){
-let audio=new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_cedb7c1e1c.mp3");
-audio.play();
+new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_cedb7c1e1c.mp3").play();
+}
+
+function addPepperoni(slice){
+
+for(let i=0;i<2;i++){
+
+let pep=document.createElement("div");
+pep.className="pepperoni";
+
+pep.style.top=(Math.random()*60+20)+"%";
+pep.style.left=(Math.random()*60+20)+"%";
+
+slice.appendChild(pep);
+
+}
+
 }
 
 function createPizza(){
@@ -111,15 +155,17 @@ slice.className="slice";
 
 let angle=(360/totalSlices)*i;
 
-slice.style.transform="rotate("+angle+"deg) skewY("+(90-360/totalSlices)+"deg)";
-
-slice.dataset.index=i;
+slice.style.transform=
+"rotate("+angle+"deg) skewY("+(90-360/totalSlices)+"deg)";
 
 slice.onclick=function(){
 selectSlice(this);
 };
 
+addPepperoni(slice);
+
 pizza.appendChild(slice);
+
 }
 
 }
@@ -128,7 +174,7 @@ let selected=[];
 
 function selectSlice(slice){
 
-slice.style.background="#ef476f";
+slice.classList.add("selected");
 
 selected.push(slice);
 
@@ -137,13 +183,20 @@ if(selected.length===correctSlices){
 document.getElementById("result").innerHTML="✅ Correct!";
 playCorrect();
 
+score++;
+document.getElementById("score").innerHTML="Score: "+score;
+
 setTimeout(newQuestion,1200);
 
 }
+
 else if(selected.length>correctSlices){
 
 document.getElementById("result").innerHTML="❌ Too many slices!";
 playWrong();
+
+score=0;
+document.getElementById("score").innerHTML="Score: "+score;
 
 setTimeout(newQuestion,1200);
 
