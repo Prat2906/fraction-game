@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fraction Builder</title>
+<style>
+body{
+font-family: Arial;
+text-align:center;
+background:#f4f8ff;
+}
+
+.box{
+font-size:30px;
+margin:20px;
+}
+
+button{
+padding:10px 20px;
+font-size:18px;
+margin:10px;
+cursor:pointer;
+}
+
+#result{
+font-size:24px;
+margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Fraction Builder Game</h1>
+
+<div class="box">
+Fill the missing number:
+</div>
+
+<div class="box">
+<span id="num1"></span> / <span id="den"></span>
+=
+<span id="num2"></span> / <span id="den2"></span>
+</div>
+
+<input id="answer" placeholder="Your answer">
+
+<br><br>
+
+<button onclick="check()">Check</button>
+<button onclick="newQ()">New Question</button>
+
+<div id="result"></div>
+
+<script>
+
+let a,b,c;
+
+function newQ(){
+
+a = Math.floor(Math.random()*5)+1;
+b = Math.floor(Math.random()*5)+2;
+c = a*2;
+
+document.getElementById("num1").innerHTML=a;
+document.getElementById("den").innerHTML=b;
+document.getElementById("num2").innerHTML="?";
+document.getElementById("den2").innerHTML=b*2;
+
+document.getElementById("result").innerHTML="";
+document.getElementById("answer").value="";
+}
+
+function check(){
+
+let ans=document.getElementById("answer").value;
+
+if(ans==c){
+document.getElementById("result").innerHTML="✅ Correct!";
+}
+else{
+document.getElementById("result").innerHTML="❌ Try again";
+}
+
+}
+
+newQ();
+
+</script>
+
+</body>
+</html>
