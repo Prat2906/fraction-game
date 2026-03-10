@@ -11,33 +11,34 @@ font-family:Arial;
 text-align:center;
 background:linear-gradient(#ffe8c7,#ffb4a2);
 margin:0;
-padding:10px;
+padding:5px;
 }
 
 h1{
 color:#c1121f;
+font-size:28px;
+margin:5px;
 }
 
 #score{
-font-size:20px;
-margin-top:5px;
-color:#333;
+font-size:18px;
+margin:5px;
 }
 
 #question{
-font-size:24px;
+font-size:22px;
 margin-top:10px;
-margin-bottom:10px;
 }
 
 #pizza{
-width:260px;
-height:260px;
-margin:20px auto;
+width:200px;
+height:200px;
+margin:15px auto;
 border-radius:50%;
 position:relative;
 background:#f4a261;
-box-shadow:0 0 15px rgba(0,0,0,0.3);
+box-shadow:0 0 10px rgba(0,0,0,0.3);
+overflow:hidden;
 }
 
 .slice{
@@ -48,7 +49,7 @@ background:#ffd166;
 border:2px solid #e76f51;
 transform-origin:100% 100%;
 cursor:pointer;
-transition:0.3s;
+transition:0.2s;
 }
 
 .slice:hover{
@@ -57,38 +58,30 @@ filter:brightness(1.1);
 
 .selected{
 background:#ef476f !important;
-animation:pop 0.2s;
-}
-
-@keyframes pop{
-0%{transform:scale(1)}
-50%{transform:scale(1.1)}
-100%{transform:scale(1)}
 }
 
 .pepperoni{
-width:16px;
-height:16px;
+width:12px;
+height:12px;
 background:#b22222;
 border-radius:50%;
 position:absolute;
 }
 
 #result{
-font-size:22px;
+font-size:20px;
 margin-top:10px;
 font-weight:bold;
 }
 
 button{
-padding:10px 20px;
-font-size:18px;
+padding:8px 18px;
+font-size:16px;
 border:none;
 background:#2a9d8f;
 color:white;
-border-radius:8px;
+border-radius:6px;
 cursor:pointer;
-margin-top:10px;
 }
 
 button:hover{
@@ -100,7 +93,7 @@ background:#21867a;
 
 <body>
 
-<h1>🍕 Fraction Pizza Game</h1>
+<h1>🍕 Fraction Pizza</h1>
 
 <div id="score">Score: 0</div>
 
@@ -121,11 +114,13 @@ let score=0;
 const pizza=document.getElementById("pizza");
 
 function playCorrect(){
-new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_115b9b0a4c.mp3").play();
+const sound=new Audio("https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3");
+sound.play();
 }
 
 function playWrong(){
-new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_cedb7c1e1c.mp3").play();
+const sound=new Audio("https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-buzz-950.mp3");
+sound.play();
 }
 
 function addPepperoni(slice){
@@ -135,8 +130,8 @@ for(let i=0;i<2;i++){
 let pep=document.createElement("div");
 pep.className="pepperoni";
 
-pep.style.top=(Math.random()*60+20)+"%";
-pep.style.left=(Math.random()*60+20)+"%";
+pep.style.top=(Math.random()*60+10)+"%";
+pep.style.left=(Math.random()*60+10)+"%";
 
 slice.appendChild(pep);
 
@@ -155,8 +150,7 @@ slice.className="slice";
 
 let angle=(360/totalSlices)*i;
 
-slice.style.transform=
-"rotate("+angle+"deg) skewY("+(90-360/totalSlices)+"deg)";
+slice.style.transform="rotate("+angle+"deg) skewY("+(90-360/totalSlices)+"deg)";
 
 slice.onclick=function(){
 selectSlice(this);
