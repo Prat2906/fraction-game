@@ -1,89 +1,172 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Fraction Builder</title>
+<meta charset="UTF-8">
+<title>Fraction Pizza Game</title>
+
 <style>
+
 body{
-font-family: Arial;
+font-family:Arial;
 text-align:center;
-background:#f4f8ff;
+background:linear-gradient(#ffecd2,#fcb69f);
+margin:0;
+padding:20px;
 }
 
-.box{
-font-size:30px;
-margin:20px;
+h1{
+color:#d62828;
 }
 
-button{
-padding:10px 20px;
-font-size:18px;
-margin:10px;
+#pizza{
+width:320px;
+height:320px;
+margin:30px auto;
+border-radius:50%;
+position:relative;
+background:#f4a261;
+box-shadow:0 0 15px rgba(0,0,0,0.3);
+}
+
+.slice{
+position:absolute;
+width:50%;
+height:50%;
+background:#ffd166;
+border:2px solid #e76f51;
+transform-origin:100% 100%;
 cursor:pointer;
+transition:0.3s;
+}
+
+.slice:hover{
+transform:scale(1.05);
+}
+
+#question{
+font-size:26px;
+margin-top:10px;
 }
 
 #result{
 font-size:24px;
 margin-top:20px;
+font-weight:bold;
 }
+
+button{
+padding:10px 20px;
+font-size:18px;
+border:none;
+background:#2a9d8f;
+color:white;
+border-radius:8px;
+cursor:pointer;
+}
+
+button:hover{
+background:#21867a;
+}
+
 </style>
 </head>
 
 <body>
 
-<h1>Fraction Builder Game</h1>
+<h1>🍕 Fraction Pizza Game</h1>
 
-<div class="box">
-Fill the missing number:
-</div>
+<div id="question"></div>
 
-<div class="box">
-<span id="num1"></span> / <span id="den"></span>
-=
-<span id="num2"></span> / <span id="den2"></span>
-</div>
+<div id="pizza"></div>
 
-<input id="answer" placeholder="Your answer">
-
-<br><br>
-
-<button onclick="check()">Check</button>
-<button onclick="newQ()">New Question</button>
+<button onclick="newQuestion()">New Pizza</button>
 
 <div id="result"></div>
 
 <script>
 
-let a,b,c;
+let totalSlices;
+let correctSlices;
 
-function newQ(){
+const pizza=document.getElementById("pizza");
 
-a = Math.floor(Math.random()*5)+1;
-b = Math.floor(Math.random()*5)+2;
-c = a*2;
-
-document.getElementById("num1").innerHTML=a;
-document.getElementById("den").innerHTML=b;
-document.getElementById("num2").innerHTML="?";
-document.getElementById("den2").innerHTML=b*2;
-
-document.getElementById("result").innerHTML="";
-document.getElementById("answer").value="";
+function playCorrect(){
+let audio=new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_115b9b0a4c.mp3");
+audio.play();
 }
 
-function check(){
+function playWrong(){
+let audio=new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_cedb7c1e1c.mp3");
+audio.play();
+}
 
-let ans=document.getElementById("answer").value;
+function createPizza(){
 
-if(ans==c){
+pizza.innerHTML="";
+
+for(let i=0;i<totalSlices;i++){
+
+let slice=document.createElement("div");
+slice.className="slice";
+
+let angle=(360/totalSlices)*i;
+
+slice.style.transform="rotate("+angle+"deg) skewY("+(90-360/totalSlices)+"deg)";
+
+slice.dataset.index=i;
+
+slice.onclick=function(){
+selectSlice(this);
+};
+
+pizza.appendChild(slice);
+}
+
+}
+
+let selected=[];
+
+function selectSlice(slice){
+
+slice.style.background="#ef476f";
+
+selected.push(slice);
+
+if(selected.length===correctSlices){
+
 document.getElementById("result").innerHTML="✅ Correct!";
+playCorrect();
+
+setTimeout(newQuestion,1200);
+
 }
-else{
-document.getElementById("result").innerHTML="❌ Try again";
-}
+else if(selected.length>correctSlices){
+
+document.getElementById("result").innerHTML="❌ Too many slices!";
+playWrong();
+
+setTimeout(newQuestion,1200);
 
 }
 
-newQ();
+}
+
+function newQuestion(){
+
+selected=[];
+document.getElementById("result").innerHTML="";
+
+totalSlices=[4,6,8][Math.floor(Math.random()*3)];
+correctSlices=Math.floor(Math.random()*totalSlices)+1;
+
+document.getElementById("question").innerHTML=
+"Select <b>"+correctSlices+"/"+totalSlices+"</b> of the pizza";
+
+createPizza();
+
+}
+
+newQuestion();
 
 </script>
 
